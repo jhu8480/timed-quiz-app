@@ -10,8 +10,6 @@ startButton.addEventListener('click', startTheQuiz);
 let timeLeft = 60;
 let currentQuestion = 0;
 let score = 0;
-let testEnded = false;
-
 
 
 
@@ -21,15 +19,17 @@ timeDisplay.setAttribute('style', 'opacity: 0');
 //functions
 
 function startTheQuiz() {
+  timeLeft = 60;
   timeDisplay.setAttribute('style', 'display: default');
   timeDisplay.innerText = `Time left: 60`;
   let timeInterval = setInterval(() => {
-    if (timeLeft > -1) {
+    if (timeLeft > 0) {
       timeLeft--;
       timeDisplay.innerText = `Time left: ${timeLeft}`;
     } else {
       clearInterval(timeInterval);
       timeDisplay.innerText = `Time's up!`
+      loadFinalPage();
     }
   }, 1000);
 
@@ -54,21 +54,41 @@ function renderQuestion() {
     button.setAttribute('style', 'display: block');
     container.appendChild(button);
     button.addEventListener('click', (e) => {
-      if (testEnded) {
-        
-      } else {
-        if (button.innerText === questions[currentQuestion].correct) {
-          currentQuestion++;
+      if(currentQuestion === questions.length - 1) {
+        const gotFinalOneCorrect = e.target.innerText === questions[currentQuestion].correct;
+        if(gotFinalOneCorrect) {
           score++;
-          renderQuestion();
-        } else {
-          timeLeft -= 10;
-        }
+          loadFinalPage();
+          timeLeft = 0;
+        } 
+        return;
       }
-    })
+
+      if (button.innerText === questions[currentQuestion].correct) {
+        currentQuestion++;
+        score++;
+        renderQuestion();
+      } else {
+        timeLeft -= 5;
+      }
+  })
   });
 
 }
+
+
+function loadFinalPage() {
+  container.innerHTML = '';
+  const finalPageTitle = document.createElement('h2');
+  finalPageTitle.innerText = `Quiz over, your score is ${score}`;
+  container.appendChild(finalPageTitle);
+
+  const finalButton1 = document.createElement('button');
+  finalButton1.innerText = 'Take test again';
+  finalButton1.setAttribute('style', 'display: block');
+  container.appendChild(finalButton1);
+}
+
 
 function creatArray(objArr, currentQuestion) {
   const arr = [];
@@ -78,5 +98,7 @@ function creatArray(objArr, currentQuestion) {
   if(objArr[currentQuestion].d) arr.push(objArr[currentQuestion].d);
   return arr;
 }
+
+
 
 
