@@ -30,7 +30,7 @@ const questions = [
     correct: 'true'
   }, 
   {
-    question: 'The author of the test is the most handsome man in Scarborough, Ontario',
+    question: 'The author of the test (Jinhui Hu) is the most handsome man in Scarborough, Ontario',
     a: 'true',
     b: 'false',
     c: 'maybe',
