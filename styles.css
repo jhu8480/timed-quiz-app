@@ -43,3 +43,7 @@ main {
 li {
   list-style-type: none;
 }
+
+.answerButtons {
+  margin-top: 10px;
+}

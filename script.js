@@ -9,6 +9,8 @@ startButton.addEventListener('click', startTheQuiz);
 
 let timeLeft = 60;
 let currentQuestion = 0;
+let score = 0;
+let testEnded = false;
 
 
 
@@ -27,42 +29,54 @@ function startTheQuiz() {
       timeDisplay.innerText = `Time left: ${timeLeft}`;
     } else {
       clearInterval(timeInterval);
+      timeDisplay.innerText = `Time's up!`
     }
   }, 1000);
 
   renderQuestion();
 }
 
+
 function renderQuestion() {
-  container.innerHTML = 
-    `<h2>Question ${currentQuestion + 1}</h2>
-    <p>${questions[currentQuestion].question}</p>
-    <ul>
-      <li>
-      <input type="radio" id="a" name="choice">
-      <label for="a">${questions[currentQuestion].a}<label>
-      </li>
-      <li>
-      <input type="radio" id="b" name="choice">
-      <label for="a">${questions[currentQuestion].b}<label>
-      </li>
-      <li>
-      <input type="radio" id="c" name="choice">
-      <label for="a">${questions[currentQuestion].c}<label>
-      </li>
-      <li>
-      <input type="radio" id="d" name="choice">
-      <label for="a">${questions[currentQuestion].d}<label>
-      </li>
-    </ul>
-    <button id="submit-question">Submit</button>`;
-    const submitButton = document.querySelector('#submit-question');
-    submitButton.addEventListener('click', nextQuestion);
+
+  container.innerHTML = '';
+  const questionHeader = document.createElement('h2');
+  questionHeader.innerText = `Question No.: ${currentQuestion + 1}`;
+  container.appendChild(questionHeader);
+  const questionBody = document.createElement('p');
+  questionBody.innerText = questions[currentQuestion].question;
+  container.appendChild(questionBody);
+
+  const answersArr = creatArray(questions, currentQuestion);
+  answersArr.forEach((answer) => {
+    const button = document.createElement('button');
+    button.innerText = answer;
+    button.setAttribute('style', 'display: block');
+    container.appendChild(button);
+    button.addEventListener('click', (e) => {
+      if (testEnded) {
+        
+      } else {
+        if (button.innerText === questions[currentQuestion].correct) {
+          currentQuestion++;
+          score++;
+          renderQuestion();
+        } else {
+          timeLeft -= 10;
+        }
+      }
+    })
+  });
+
 }
 
-function nextQuestion() {
-  if (currentQuestion == questions.length - 1) return;
-
-  currentQuestion++;
-  renderQuestion();
+function creatArray(objArr, currentQuestion) {
+  const arr = [];
+  if(objArr[currentQuestion].a) arr.push(objArr[currentQuestion].a);
+  if(objArr[currentQuestion].b) arr.push(objArr[currentQuestion].b);
+  if(objArr[currentQuestion].c) arr.push(objArr[currentQuestion].c);
+  if(objArr[currentQuestion].d) arr.push(objArr[currentQuestion].d);
+  return arr;
 }
+
+
