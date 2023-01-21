@@ -3,7 +3,6 @@ import questions from "./data.js";
 const container = document.getElementById('container');
 const startButton = document.getElementById('start');
 const viewScoreBtn = document.querySelector('#view-highscore');
-
 const timeDisplay = document.querySelector('#time-display');
 startButton.addEventListener('click', startTheQuiz);
 
@@ -20,15 +19,16 @@ timeDisplay.setAttribute('style', 'opacity: 0');
 
 function startTheQuiz() {
   timeLeft = 60;
+  viewScoreBtn.setAttribute('style', 'display: none');
   timeDisplay.setAttribute('style', 'display: default');
-  timeDisplay.innerText = `Time left: 60`;
+  timeDisplay.innerText = `Time left: ${timeLeft}`;
   let timeInterval = setInterval(() => {
     if (timeLeft > 0) {
       timeLeft--;
       timeDisplay.innerText = `Time left: ${timeLeft}`;
     } else {
+      timeDisplay.innerText = `Test finished`;
       clearInterval(timeInterval);
-      timeDisplay.innerText = `Time's up!`
       loadFinalPage();
     }
   }, 1000);
@@ -52,8 +52,10 @@ function renderQuestion() {
     const button = document.createElement('button');
     button.innerText = answer;
     button.setAttribute('style', 'display: block');
+    button.setAttribute('class', 'answerButtons');
     container.appendChild(button);
     button.addEventListener('click', (e) => {
+      e.preventDefault();
       if(currentQuestion === questions.length - 1) {
         const gotFinalOneCorrect = e.target.innerText === questions[currentQuestion].correct;
         if(gotFinalOneCorrect) {
@@ -79,14 +81,40 @@ function renderQuestion() {
 
 function loadFinalPage() {
   container.innerHTML = '';
+  viewScoreBtn.setAttribute('style', 'display: default');
   const finalPageTitle = document.createElement('h2');
   finalPageTitle.innerText = `Quiz over, your score is ${score}`;
   container.appendChild(finalPageTitle);
 
+  const nameInput = document.createElement('input');
+  nameInput.setAttribute('type', 'text');
+  nameInput.setAttribute('placeholder', 'input your name here');
+  container.appendChild(nameInput);
+
+
   const finalButton1 = document.createElement('button');
-  finalButton1.innerText = 'Take test again';
-  finalButton1.setAttribute('style', 'display: block');
+  finalButton1.setAttribute('class', 'answerButtons');
+  finalButton1.innerText = 'Save result';
   container.appendChild(finalButton1);
+  finalButton1.addEventListener('click', () => {
+    if (nameInput.value === '') return;
+    const scoresArray = getLocalStorage();
+    const newRecord = {initials: nameInput.value, score: score}
+    scoresArray.push(newRecord);
+    localStorage.setItem('scoredata', JSON.stringify(scoresArray));
+  })
+
+
+  const finalButton2 = document.createElement('button');
+  finalButton2.setAttribute('class', 'answerButtons');
+  finalButton2.innerText = 'Take test again';
+  finalButton2.setAttribute('style', 'display: block');
+  container.appendChild(finalButton2);
+  finalButton2.addEventListener('click', () => {
+    score = 0;
+    currentQuestion = 0;
+    startTheQuiz();
+  })
 }
 
 
@@ -99,6 +127,8 @@ function creatArray(objArr, currentQuestion) {
   return arr;
 }
 
-
+function getLocalStorage() {
+  return localStorage.getItem('scoredata') === null ? [] : JSON.parse(localStorage.getItem('scoredata'));
+}
 
 

@@ -22,6 +22,19 @@ const questions = [
     c: 'Vue',
     d: 'React',
     correct: 'React'
+  },
+  {
+    question: 'Class (syntax sugar) is introduced in JavaScript in ES6',
+    a: 'true',
+    b: 'false',
+    correct: 'true'
+  }, 
+  {
+    question: 'The author of the test is the most handsome man in Scarborough, Ontario',
+    a: 'true',
+    b: 'false',
+    c: 'maybe',
+    correct: 'true'
   }
 ];
 
