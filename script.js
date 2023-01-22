@@ -145,6 +145,7 @@ function getLocalStorage() {
 
 function loadScoresPage() {
   container.innerHTML = '';
+  timeDisplay.setAttribute('style', 'display: none');
   const scorePageTitle = document.createElement('h2');
   scorePageTitle.innerText = 'Score Rank:'
   container.appendChild(scorePageTitle);
