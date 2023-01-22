@@ -4,6 +4,7 @@ const container = document.getElementById('container');
 const viewScoreBtn = document.querySelector('#view-highscore');
 const timeDisplay = document.querySelector('#time-display');
 viewScoreBtn.addEventListener('click', loadScoresPage);
+const sign = document.getElementById('correct-sign');
 
 let timeLeft = 60;
 let currentQuestion = 0;
@@ -13,6 +14,7 @@ let score = 0;
 
 //execution
 timeDisplay.setAttribute('style', 'display: none');
+sign.setAttribute('style', 'opacity: 0');
 loadFirstPage();
 
 //functions
@@ -59,6 +61,7 @@ function renderQuestion() {
       if(currentQuestion === questions.length - 1) {
         const gotFinalOneCorrect = e.target.innerText === questions[currentQuestion].correct;
         if(gotFinalOneCorrect) {
+          showCorrectSign(sign);
           score++;
           loadFinalPage();
           timeLeft = 0;
@@ -69,6 +72,7 @@ function renderQuestion() {
       }
 
       if (button.innerText === questions[currentQuestion].correct) {
+        showCorrectSign(sign);
         currentQuestion++;
         score++;
         renderQuestion();
@@ -180,6 +184,13 @@ function loadFirstPage() {
   startButton.setAttribute('class', 'answerButtons');
   startButton.addEventListener('click', startTheQuiz);
   container.appendChild(startButton);
+}
+
+function showCorrectSign(sign) {
+  sign.setAttribute('style', 'opacity: 1');
+  setTimeout(() => {
+    sign.setAttribute('style', 'opacity: 0');
+  }, 500);
 }
 
 
