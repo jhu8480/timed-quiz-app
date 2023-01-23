@@ -171,6 +171,8 @@ function loadScoresPage() {
 }
 
 function loadFirstPage() {
+  currentQuestion = 0;
+  score = 0;
   container.innerHTML = '';
   const testTitle = document.createElement('h2');
   testTitle.innerText = 'JavaScript Quiz';
